@@ -1,14 +1,16 @@
-
 {
-  "name": "My Automated ML Job",
-  "tasks": [
-    {
-      "task_key": "run_model",
-      "notebook_task": {
-        "notebook_path": "/Workspace/Users/nbharathsoftware@gmail.com/mlnotebook.py",
-        "source": "WORKSPACE"
-      },
-      "existing_cluster_id": "0902-060450-um7jf6d3"
-    }
-  ]
+  "job_id": 123,
+  "new_settings": {
+    "name": "My Automated ML Job",
+    "tasks": [
+      {
+        "task_key": "run_model",
+        "notebook_task": {
+          "notebook_path": "/Workspace/Users/nbharathsoftware@gmail.com/mlnotebook.py",
+          "source": "WORKSPACE"
+        },
+        "existing_cluster_id": "0902-060450-um7jf6d3"
+      }
+    ]
+  }
 }
