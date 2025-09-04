@@ -1,0 +1,41 @@
+# Name of your GitHub Actions workflow
+name: Deploy Notebook to Databricks Job
+
+# Trigger the workflow on pushes to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Check out the repository code
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # 2. Set up Python, which is needed to install the Databricks CLI
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      # 3. Install the Databricks CLI
+      - name: Install Databricks CLI
+        run: pip install databricks-cli
+
+      # 4. Configure the Databricks CLI with the host and token from secrets
+      - name: Configure Databricks CLI
+        run: |
+          echo "Configuring Databricks CLI"
+          databricks configure --token <<EOL
+          ${{ secrets.DATABRICKS_HOST }}
+          ${{ secrets.DATABRICKS_TOKEN }}
+          EOL
+          
+      # 5. Deploy the job by updating its settings from a JSON file
+      - name: Deploy Databricks Job
+        run: |
+          echo "Deploying job with ID: ${{ secrets.DATABRICKS_JOB_ID }}"
+          databricks jobs reset --job-id ${{ secrets.DATABRICKS_JOB_ID }} --json-file job-settings.json
