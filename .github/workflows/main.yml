@@ -12,21 +12,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-
+      # 1. Install the NEW Databricks CLI
       - name: Install Databricks CLI
-        run: pip install databricks-cli
+        run: curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      - name: Configure Databricks CLI
-        run: |
-          databricks configure --token <<EOL
-          ${{ secrets.DATABRICKS_HOST }}
-          ${{ secrets.DATABRICKS_TOKEN }}
-          EOL
-          
+      # 2. Deploy the job using the new CLI's syntax
       - name: Deploy Databricks Job
         run: |
-          databricks jobs reset --job-id ${{ secrets.DATABRICKS_JOB_ID }} --json "$(cat job-settings.json)"
+          databricks jobs reset --job-id ${{ secrets.DATABRICKS_JOB_ID }} --json-file job-settings.json
+        # 3. Set environment variables for authentication
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
