@@ -18,9 +18,9 @@ jobs:
 
       # 2. Deploy the job using the new CLI's syntax
       - name: Deploy Databricks Job
+        # THE FIX: 'run' and 'env' must be indented to be part of the step above.
         run: |
-          databricks jobs reset --job-id ${{ secrets.DATABRICKS_JOB_ID }} --json-file job-settings.json
-        # 3. Set environment variables for authentication
+          databricks jobs reset --json-file job-settings.json
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
