@@ -1,5 +1,3 @@
-# /.github/workflows/main.yml
-
 name: Deploy Notebook to Databricks Job
 
 on:
@@ -31,4 +29,4 @@ jobs:
           
       - name: Deploy Databricks Job
         run: |
-          databricks jobs reset --job-id ${{ secrets.DATABRICKS_JOB_ID }} --json-file job-settings.json
+          databricks jobs reset --job-id ${{ secrets.DATABRICKS_JOB_ID }} --json "$(cat job-settings.json)"
