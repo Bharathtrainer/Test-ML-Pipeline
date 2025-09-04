@@ -1,14 +1,34 @@
+# /.github/workflows/main.yml
 
-{
-  "name": "My Automated ML Job",
-  "tasks": [
-    {
-      "task_key": "run_model",
-      "notebook_task": {
-        "notebook_path": "/Workspace/Users/nbharathsoftware@gmail.com/mlnotebook.py",
-        "source": "WORKSPACE"
-      },
-      "existing_cluster_id": "0902-060450-um7jf6d3"
-    }
-  ]
-}
+name: Deploy Notebook to Databricks Job
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Install Databricks CLI
+        run: pip install databricks-cli
+
+      - name: Configure Databricks CLI
+        run: |
+          databricks configure --token <<EOL
+          ${{ secrets.DATABRICKS_HOST }}
+          ${{ secrets.DATABRICKS_TOKEN }}
+          EOL
+          
+      - name: Deploy Databricks Job
+        run: |
+          databricks jobs reset --job-id ${{ secrets.DATABRICKS_JOB_ID }} --json-file job-settings.json
