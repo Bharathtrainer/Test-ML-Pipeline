@@ -12,15 +12,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      # 1. Install the NEW Databricks CLI
       - name: Install Databricks CLI
         run: curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      # 2. Deploy the job using the new CLI's syntax
       - name: Deploy Databricks Job
-        # THE FIX: 'run' and 'env' must be indented to be part of the step above.
         run: |
-          databricks jobs reset --json-file job-settings.json
+          databricks jobs reset --json "@job-settings.json"
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
